@@ -14,15 +14,19 @@ def main():
   test_set = './data/testing_data'
   classes = ['pembroke', 'cardigan']
 
+  learn_rate = 0.001
+  num_epochs = 30
+  batch_size = 4
+
   TRANSFORM_IMG = transforms.Compose(
     [transforms.Resize((32,32)),
     transforms.ToTensor(),
     transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
   train_data = torchvision.datasets.ImageFolder(root=train_set, transform=TRANSFORM_IMG)
-  train_data_loader = DataLoader(train_data, batch_size=4, shuffle=True,  num_workers=2)
+  train_data_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True,  num_workers=2)
   test_data = torchvision.datasets.ImageFolder(root=test_set, transform=TRANSFORM_IMG)
-  test_data_loader = DataLoader(test_data, batch_size=4, shuffle=True, num_workers=2) 
+  test_data_loader = DataLoader(test_data, batch_size=batch_size, shuffle=True, num_workers=2) 
 
   class Net(nn.Module):
     def __init__(self):
@@ -46,9 +50,9 @@ def main():
   net = Net()
 
   criterion = nn.CrossEntropyLoss()
-  optimizer = optim.Adam(net.parameters(), lr=0.001)
+  optimizer = optim.Adam(net.parameters(), lr=learn_rate)
 
-  for epoch in range(30):  # loop over the dataset multiple times
+  for epoch in range(num_epochs):  # loop over the dataset multiple times
     running_loss = 0.0
     for i, data in enumerate(train_data_loader, 0):
       # get the inputs; data is a list of [inputs, labels]
